@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>healthAbility: The Strategy Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for healthAbility theme */
+        :root {
+            --ha-blue: #0077C8;
+            --ha-green: #8CC63F;
+            --ha-yellow: #FDB913;
+            --ha-light-blue: #D1E9F8;
+            --ha-dark-text: #1E293B;
+            --ha-light-text: #475569;
+        }
+        .bg-ha-blue { background-color: var(--ha-blue); }
+        .text-ha-blue { color: var(--ha-blue); }
+        .border-ha-blue { border-color: var(--ha-blue); }
+        .bg-ha-green { background-color: var(--ha-green); }
+        .text-ha-green { color: var(--ha-green); }
+        .bg-ha-yellow { background-color: var(--ha-yellow); }
+        .text-ha-yellow { color: var(--ha-yellow); }
+        .bg-ha-light-blue { background-color: var(--ha-light-blue); }
+
+        .btn {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .option-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .option-card:hover {
+            transform: scale(1.03);
+            border-color: var(--ha-blue);
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-ha-dark-text">
+
+    <div id="game-container" class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+        <div class="w-full max-w-4xl mx-auto">
+
+            <!-- Header with Logo -->
+            <header class="text-center mb-6">
+                <div class="inline-flex items-center gap-3">
+                    <svg width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 0 C77.6 0 100 22.4 100 50 C100 77.6 77.6 100 50 100 C22.4 100 0 77.6 0 50 C0 22.4 22.4 0 50 0 Z" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="2"/>
+                        <path d="M50,20 C60,30 60,50 50,60" fill="none" stroke="#FDB913" stroke-width="12" stroke-linecap="round" opacity="0.8"/>
+                        <path d="M40,35 C50,45 50,65 40,75" fill="none" stroke="#0077C8" stroke-width="12" stroke-linecap="round" opacity="0.7"/>
+                        <path d="M60,35 C70,45 70,65 60,75" fill="none" stroke="#8CC63F" stroke-width="12" stroke-linecap="round" opacity="0.8"/>
+                    </svg>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-ha-dark-text">healthAbility</h1>
+                </div>
+            </header>
+
+            <!-- Game Screens -->
+            <main id="main-content" class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 lg:p-12 overflow-hidden">
+                
+                <!-- Start Screen -->
+                <div id="start-screen" class="text-center fade-in">
+                    <h2 class="text-2xl sm:text-3xl font-bold mb-2">Welcome to The Strategy Game!</h2>
+                    <p class="text-ha-light-text max-w-2xl mx-auto mb-6">Let's explore how our 2025-2027 strategy applies to your work. This short, interactive game will help us learn together how to "make wellbeing easy" for our clients and community.</p>
+                    <button onclick="startGame()" class="btn bg-ha-blue text-white font-bold py-3 px-8 rounded-full shadow-md">Let's Get Started</button>
+                </div>
+
+                <!-- Role Selection Screen -->
+                <div id="role-screen" class="hidden text-center fade-in">
+                    <h2 class="text-2xl sm:text-3xl font-bold mb-2">Choose Your Journey</h2>
+                    <p class="text-ha-light-text max-w-2xl mx-auto mb-8">Our strategy applies to everyone. To see how it relates to you, please select the role that best matches your own.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div onclick="selectRole('front-line')" class="option-card bg-slate-50 p-6 rounded-xl border-2 border-slate-200 text-center">
+                            <h3 class="font-bold text-lg mb-2">Front-line Delivery</h3>
+                            <p class="text-sm text-ha-light-text">(e.g., Carer, Clinician, Support Worker)</p>
+                        </div>
+                        <div onclick="selectRole('team-leader')" class="option-card bg-slate-50 p-6 rounded-xl border-2 border-slate-200 text-center">
+                            <h3 class="font-bold text-lg mb-2">Team Leader</h3>
+                            <p class="text-sm text-ha-light-text">(e.g., Program Manager, People Leader)</p>
+                        </div>
+                        <div onclick="selectRole('executive')" class="option-card bg-slate-50 p-6 rounded-xl border-2 border-slate-200 text-center">
+                            <h3 class="font-bold text-lg mb-2">Executive / Support</h3>
+                            <p class="text-sm text-ha-light-text">(e.g., Strategy, Finance, HR, Policy)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario Screen -->
+                <div id="scenario-screen" class="hidden fade-in">
+                    <div id="scenario-content">
+                        <!-- Scenario will be injected here -->
+                    </div>
+                </div>
+
+                <!-- Score Screen -->
+                <div id="score-screen" class="hidden text-center fade-in">
+                    <h2 class="text-2xl sm:text-3xl font-bold mb-2">Challenge Complete!</h2>
+                    <p class="text-ha-light-text max-w-2xl mx-auto mb-8">Great work! This wasn't about a perfect score, but about engaging with our new strategic direction. Here's how your choices aligned with our core goals:</p>
+                    
+                    <div class="space-y-4 text-left max-w-xl mx-auto mb-8">
+                        <div class="bg-ha-light-blue p-4 rounded-lg">
+                            <h3 class="font-bold text-ha-blue">Goal 1: Innovative & Accessible Services</h3>
+                            <p id="score-goal1" class="text-sm text-ha-dark-text"></p>
+                        </div>
+                        <div class="bg-ha-light-blue p-4 rounded-lg">
+                            <h3 class="font-bold text-ha-blue">Goal 2: A Voice for Wellbeing</h3>
+                            <p id="score-goal2" class="text-sm text-ha-dark-text"></p>
+                        </div>
+                        <div class="bg-ha-light-blue p-4 rounded-lg">
+                            <h3 class="font-bold text-ha-blue">Goal 3: Empowering Our People</h3>
+                            <p id="score-goal3" class="text-sm text-ha-dark-text"></p>
+                        </div>
+                    </div>
+
+                    <p class="text-ha-light-text max-w-2xl mx-auto mb-6 italic">"Realising our vision and purpose will take time, but we are committed to collaborating closely with our community, partners and people..." - John Rasa, Board Chair</p>
+                    <button onclick="restartGame()" class="btn bg-ha-green text-white font-bold py-3 px-8 rounded-full shadow-md">Play Again</button>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal for Feedback -->
+    <div id="feedback-modal" class="fixed inset-0 bg-black bg-opacity-60 items-center justify-center p-4 hidden modal-overlay">
+        <div id="modal-content-box" class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-lg text-center modal-content opacity-0 scale-95">
+            <div id="feedback-icon" class="mx-auto mb-4 w-16 h-16 rounded-full flex items-center justify-center">
+                <!-- Icon will be injected here -->
+            </div>
+            <h3 id="feedback-title" class="text-2xl font-bold mb-2"></h3>
+            <p id="feedback-text" class="text-ha-light-text mb-6"></p>
+            <button onclick="closeModal()" class="btn bg-ha-blue text-white font-bold py-2 px-6 rounded-full">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Game Data ---
+        const scenarios = {
+            'front-line': {
+                situation: "You are with a client who mentions they frequently struggle to get to appointments because of the cost and complexity of public transport. This is a known barrier for many consumers.",
+                options: [
+                    { text: "Actively listen, acknowledge their difficulty, tell them you'll raise this with your team leader to explore telehealth or other resources, and note it in their file.", score: { goal1: 1 }, feedback: { title: "Excellent Choice!", text: "This directly reflects our purpose to **make wellbeing easy** and our value of **Care**. By taking **Accountability** and flagging the issue, you are helping us innovate to provide more **accessible quality services (Goal 1)**.", icon: 'best' } },
+                    { text: "Express sympathy for their situation and suggest they look into a transport concession card.", score: { goal1: 0.5 }, feedback: { title: "Good, but could be better!", text: "This shows care, which is great. However, to truly 'make wellbeing easy,' we aim to take action and address the root of the problem. Remember Goal 1 is to innovate and provide accessible services.", icon: 'good' } },
+                    { text: "Explain that arranging transport is the client's responsibility and continue with the scheduled appointment.", score: {}, feedback: { title: "Room for Improvement", text: "While appointment times are important, our strategy calls for a person-centred approach. Recognizing and helping clients overcome barriers like cost and location is a key opportunity identified in our community research.", icon: 'improvement' } }
+                ]
+            },
+            'team-leader': {
+                situation: "One of your team members, a talented clinician, has an idea for a digital tool that could improve how clients report their own outcomes. However, developing it would take time away from their usual client-facing duties.",
+                options: [
+                    { text: "Praise their initiative. Work with them to dedicate a few hours a week to develop a small pilot project, helping them gather the evidence needed to make a stronger case.", score: { goal1: 1, goal3: 1 }, feedback: { title: "Perfect!", text: "This is leading by example! You are empowering your team and making it **easier for our people to deliver our purpose (Goal 3)**. By focusing on gathering evidence, you also directly support **Goal 1: Innovate to provide impactful services, based on evidence**.", icon: 'best' } },
+                    { text: "Tell them that while it's a good idea, the team is too busy and focused on meeting current targets to explore new projects right now.", score: {}, feedback: { title: "A Missed Opportunity", text: "Our strategy acknowledges that we must adapt. Discouraging **Innovation** could cause us to miss opportunities to improve client outcomes and make our services more impactful (Goal 1).", icon: 'improvement' } },
+                    { text: "Suggest they work on the idea in their own time and present it to you when it's more developed.", score: { goal3: 0.5 }, feedback: { title: "A Good Start", text: "It\'s good that you\'re not shutting the idea down, but our role as leaders is to actively support our people and remove barriers. This approach aligns with **Goal 3** and our guiding behaviour to 'lead the team'.", icon: 'good' } }
+                ]
+            },
+            'executive': {
+                situation: "You've been invited to a regional health partnership meeting. The agenda is focused on acute hospital care. From healthAbility's data, you know that many hospital admissions could be prevented with better community-based wellbeing programs.",
+                options: [
+                    { text: "To network and ensure the other organizations are aware of healthAbility's referral-based services.", score: { goal2: 0.5 }, feedback: { title: "A Solid Step", text: "Building awareness is important, but our strategy calls for us to be more ambitious. We don\'t just want to participate in the system; we want to actively improve it for the benefit of everyone (Goal 2).", icon: 'good' } },
+                    { text: "To listen and report back on the hospitals' priorities to ensure healthAbility's services remain aligned with them.", score: {}, feedback: { title: "Let's be Bolder", text: "While understanding partner priorities is useful, our strategy is deliberately bold and aims to *shape* the conversation, not just follow it. Our role is to advocate for the value of community health and wellbeing.", icon: 'improvement' } },
+                    { text: "Use healthAbility's data to advocate for a system-wide shift towards preventative care and propose a collaborative pilot program.", score: { goal2: 1 }, feedback: { title: "Exactly Right!", text: "This is the essence of **Goal 2: Be a voice for wellbeing practice to influence policy and improve the system**. This demonstrates **Collaboration** and **Courage**, aligning with the Board Chair\'s call for partnerships.", icon: 'best' } }
+                ]
+            }
+        };
+
+        const scoreFeedback = {
+            high: "You consistently made choices that strongly align with this goal. You\'re a natural at putting our strategy into practice!",
+            medium: "You\'re on the right track! You made some great choices that support this goal. Think about how you can apply these principles even more in your role.",
+            low: "This is a great area for growth. Reflect on the feedback from the scenarios to see how you can better align your actions with this strategic goal."
+        };
+
+        // --- Game State ---
+        let currentRole = '';
+        let scores = { goal1: 0, goal2: 0, goal3: 0 };
+        let maxScores = { goal1: 0, goal2: 0, goal3: 0 };
+
+        // --- DOM Elements ---
+        const startScreen = document.getElementById('start-screen');
+        const roleScreen = document.getElementById('role-screen');
+        const scenarioScreen = document.getElementById('scenario-screen');
+        const scoreScreen = document.getElementById('score-screen');
+        const modal = document.getElementById('feedback-modal');
+        const modalContentBox = document.getElementById('modal-content-box');
+        
+        // --- Game Logic ---
+        function showScreen(screenId) {
+            [startScreen, roleScreen, scenarioScreen, scoreScreen].forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function startGame() {
+            showScreen('role-screen');
+        }
+
+        function restartGame() {
+            scores = { goal1: 0, goal2: 0, goal3: 0 };
+            maxScores = { goal1: 0, goal2: 0, goal3: 0 };
+            currentRole = '';
+            showScreen('start-screen');
+        }
+
+        function selectRole(role) {
+            currentRole = role;
+            calculateMaxScore(role);
+            displayScenario(role);
+            showScreen('scenario-screen');
+        }
+        
+        function calculateMaxScore(role) {
+            const scenario = scenarios[role];
+            // Reset max scores for the new role
+            maxScores = { goal1: 0, goal2: 0, goal3: 0 };
+            scenario.options.forEach(option => {
+                if(option.score.goal1) maxScores.goal1 += option.score.goal1;
+                if(option.score.goal2) maxScores.goal2 += option.score.goal2;
+                if(option.score.goal3) maxScores.goal3 += option.score.goal3;
+            });
+            // To avoid division by zero if a goal isn't tested for a role
+            if (maxScores.goal1 === 0) maxScores.goal1 = 1;
+            if (maxScores.goal2 === 0) maxScores.goal2 = 1;
+            if (maxScores.goal3 === 0) maxScores.goal3 = 1;
+        }
+
+        function displayScenario(role) {
+            const scenario = scenarios[role];
+            const contentDiv = document.getElementById('scenario-content');
+            
+            let optionsHTML = scenario.options.map((option, index) => {
+                // Properly escape the feedback object for the onclick attribute
+                const feedbackString = JSON.stringify(option.feedback).replace(/'/g, "&apos;");
+                return `
+                <div onclick='handleAnswer(${JSON.stringify(option.score)}, ${feedbackString})' class="option-card bg-slate-50 p-5 rounded-lg border-2 border-transparent hover:border-ha-blue cursor-pointer">
+                    <p>${option.text}</p>
+                </div>
+            `}).join('');
+
+            contentDiv.innerHTML = `
+                <h2 class="text-xl sm:text-2xl font-bold mb-4">Your Scenario:</h2>
+                <p class="bg-ha-light-blue text-ha-dark-text p-4 rounded-lg mb-6">${scenario.situation}</p>
+                <h3 class="font-semibold mb-4">Which action do you take?</h3>
+                <div class="space-y-4">
+                    ${optionsHTML}
+                </div>
+            `;
+        }
+
+        function handleAnswer(score, feedback) {
+            if (score.goal1) scores.goal1 += score.goal1;
+            if (score.goal2) scores.goal2 += score.goal2;
+            if (score.goal3) scores.goal3 += score.goal3;
+            
+            showFeedback(feedback);
+        }
+
+        function showFeedback(feedback) {
+            const modalTitle = document.getElementById('feedback-title');
+            const modalText = document.getElementById('feedback-text');
+            const modalIcon = document.getElementById('feedback-icon');
+
+            modalTitle.textContent = feedback.title;
+            // Bolding keywords
+            modalText.innerHTML = feedback.text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-ha-blue">$1</strong>');
+            
+            let iconHTML = '';
+            let iconBgClass = '';
+            switch(feedback.icon) {
+                case 'best':
+                    iconHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>`;
+                    iconBgClass = 'bg-ha-green';
+                    break;
+                case 'good':
+                    iconHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+                    iconBgClass = 'bg-ha-yellow';
+                    break;
+                case 'improvement':
+                    iconHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`;
+                    iconBgClass = 'bg-red-500';
+                    break;
+            }
+            modalIcon.innerHTML = iconHTML;
+            modalIcon.className = `mx-auto mb-4 w-16 h-16 rounded-full flex items-center justify-center ${iconBgClass}`;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modalContentBox.classList.remove('opacity-0', 'scale-95');
+                modalContentBox.classList.add('opacity-100', 'scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            modalContentBox.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                // For this simple game, we move to the score screen after the one scenario
+                displayScore();
+            }, 300);
+        }
+
+        function displayScore() {
+            const score1 = (scores.goal1 / maxScores.goal1) * 100;
+            const score2 = (scores.goal2 / maxScores.goal2) * 100;
+            const score3 = (scores.goal3 / maxScores.goal3) * 100;
+
+            document.getElementById('score-goal1').textContent = getScoreFeedbackText(score1);
+            document.getElementById('score-goal2').textContent = getScoreFeedbackText(score2);
+            document.getElementById('score-goal3').textContent = getScoreFeedbackText(score3);
+            
+            showScreen('score-screen');
+        }
+        
+        function getScoreFeedbackText(percentage) {
+            // For this single-question game, the logic is simpler
+            if (percentage >= 100) return scoreFeedback.high;
+            if (percentage > 0) return scoreFeedback.medium;
+            return scoreFeedback.low;
+        }
+
+        // Initialize
+        window.onload = () => {
+            showScreen('start-screen');
+        };
+    </script>
+</body>
+</html>
